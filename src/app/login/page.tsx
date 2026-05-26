@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -14,28 +14,9 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
-    });
-    if (error) { setError(error.message); setLoading(false); }
-    else setSent(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) { setError("Email o contraseña incorrectos"); setLoading(false); }
   };
-
-  if (sent) {
-    return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-[var(--bg)]">
-        <div className="text-center max-w-sm flex flex-col gap-3">
-          <h1 className="font-[family-name:var(--font-lora)] text-2xl text-[var(--fg)]">
-            Revisá tu email
-          </h1>
-          <p className="text-sm text-[var(--muted)]">
-            Enviamos un link a <strong>{email}</strong>. Hacé click en él para ingresar.
-          </p>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-[var(--bg)]">
@@ -47,7 +28,7 @@ export default function LoginPage() {
           <h1 className="font-[family-name:var(--font-lora)] text-2xl text-[var(--fg)] mb-2">
             Reflexiones
           </h1>
-          <p className="text-sm text-[var(--muted)]">Ingresá tu email para continuar</p>
+          <p className="text-sm text-[var(--muted)]">Ingresá tus credenciales para continuar</p>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
@@ -59,13 +40,21 @@ export default function LoginPage() {
             autoFocus
             className="px-4 py-3 border border-[var(--border)] rounded-xl bg-transparent text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]"
           />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="px-4 py-3 border border-[var(--border)] rounded-xl bg-transparent text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]"
+          />
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button
             type="submit"
             disabled={loading}
             className="py-3 bg-[var(--fg)] text-[var(--bg)] rounded-xl hover:opacity-80 disabled:opacity-50 transition-opacity"
           >
-            {loading ? "Enviando..." : "Enviar link"}
+            {loading ? "Ingresando..." : "Ingresar"}
           </button>
         </form>
       </div>
