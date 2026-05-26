@@ -1,4 +1,5 @@
 "use client";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRecorder } from "@/lib/hooks/useRecorder";
 import { RecordButton } from "@/components/RecordButton";
 import { ReflectionForm } from "@/components/ReflectionForm";
@@ -9,40 +10,64 @@ export default function Home() {
 
   if (state === "done" && audioBlob) {
     return (
-      <main className="min-h-screen flex flex-col px-5 pt-16 pb-36 max-w-md mx-auto w-full">
+      <motion.main
+        className="min-h-screen flex flex-col px-5 pt-16 pb-36 max-w-md mx-auto w-full"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <ReflectionForm audioBlob={audioBlob} duration={duration} onSaved={reset} onCancel={reset} />
         <BottomNav />
-      </main>
+      </motion.main>
     );
   }
 
   return (
-    <main className="h-screen flex flex-col items-center px-6">
-      <div className="mt-16 text-center">
-        <h1 className="font-[family-name:var(--font-fraunces)] text-xl text-[var(--fg)]">
-          Reflexiones
-        </h1>
-      </div>
+    <main className="h-screen flex flex-col items-center justify-center px-6 pb-20">
+      <div className="flex flex-col items-center gap-10 w-full max-w-sm">
 
-      <div className="mt-auto mb-0 pb-44 flex flex-col items-center gap-6">
-        {state === "recording" && (
-          <p className="text-sm text-[var(--muted)] tracking-wide">
-            Grabando… {elapsed}s
-          </p>
-        )}
-        {state === "idle" && (
-          <p className="text-sm text-[var(--muted)]">
-            Grabá un pensamiento sobre lo que estás leyendo
-          </p>
-        )}
+        <motion.div
+          className="text-center flex flex-col gap-3"
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <h1 className="font-[family-name:var(--font-fraunces)] text-4xl text-[var(--fg)]">
+            Reflexiones
+          </h1>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={state}
+              className="text-sm text-[var(--muted)]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {state === "recording"
+                ? `Grabando… ${elapsed}s`
+                : "Grabá un pensamiento sobre lo que estás leyendo"}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
+
         <RecordButton state={state} onStart={start} onStop={stop} />
-        {state === "idle" && (
-          <p className="text-xs text-[var(--accent)] tracking-widest uppercase">
-            Tocá para grabar
-          </p>
-        )}
-      </div>
 
+        <AnimatePresence>
+          {state === "idle" && (
+            <motion.p
+              className="text-xs text-[var(--accent)] tracking-widest uppercase"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, delay: 0.4 }}
+            >
+              Tocá para grabar
+            </motion.p>
+          )}
+        </AnimatePresence>
+
+      </div>
       <BottomNav />
     </main>
   );

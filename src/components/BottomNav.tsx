@@ -11,7 +11,7 @@ export function BottomNav() {
     return (
       <Link
         href={href}
-        className={`flex flex-col items-center gap-1.5 px-6 py-3 rounded-full transition-colors ${
+        className={`flex flex-col items-center gap-1.5 w-24 py-3 rounded-full transition-colors ${
           active
             ? "text-[var(--accent)] bg-[var(--bg)]"
             : "text-[var(--muted)] hover:text-[var(--fg)]"
@@ -25,12 +25,12 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 p-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)]"
+      className="fixed left-0 right-0 z-50 flex items-center gap-1 p-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] w-fit mx-auto"
       style={{
         boxShadow: "0 8px 40px rgba(0,0,0,0.25)",
         backdropFilter: "blur(16px)",
         WebkitBackdropFilter: "blur(16px)",
-        marginBottom: "env(safe-area-inset-bottom)",
+        bottom: "calc(2rem + env(safe-area-inset-bottom))",
       }}
     >
       {navItem("/library", <Library size={22} strokeWidth={1.8} />, "Biblioteca")}
