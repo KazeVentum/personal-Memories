@@ -85,7 +85,7 @@ export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
               <span className="text-xs">{formatDuration(reflection.duration_seconds)}</span>
             )}
           </div>
-          <p className="text-[var(--fg)] font-[family-name:var(--font-lora)] truncate">
+          <p className="text-[var(--fg)] font-[family-name:var(--font-fraunces)] truncate">
             {reflection.books?.title ?? <span className="text-[var(--muted)] italic">Sin libro</span>}
             {reflection.page_number && (
               <span className="text-[var(--muted)] text-sm ml-2">p. {reflection.page_number}</span>

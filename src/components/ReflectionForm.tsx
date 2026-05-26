@@ -58,7 +58,7 @@ export function ReflectionForm({ audioBlob, duration, onSaved, onCancel }: Props
 
   return (
     <div className="w-full max-w-md flex flex-col gap-4 pb-20">
-      <h2 className="font-[family-name:var(--font-lora)] text-lg text-[var(--fg)]">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-lg text-[var(--fg)]">
         Guardar reflexión
       </h2>
 

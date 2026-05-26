@@ -13,7 +13,7 @@ export default function Home() {
         {state !== "done" && (
           <>
             <div className="text-center">
-              <h1 className="font-[family-name:var(--font-lora)] text-2xl text-[var(--fg)] mb-2">
+              <h1 className="font-[family-name:var(--font-fraunces)] text-2xl text-[var(--fg)] mb-2">
                 Reflexiones
               </h1>
               {state === "idle" && (

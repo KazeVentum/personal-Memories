@@ -1,16 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Lora, Inter } from "next/font/google";
+import { Fraunces, DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const lora = Lora({
+const fraunces = Fraunces({
   subsets: ["latin"],
-  variable: "--font-lora",
+  variable: "--font-fraunces",
   display: "swap",
+  axes: ["opsz", "SOFT", "WONK"],
 });
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
@@ -28,7 +29,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#faf9f7",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf9f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
   minimumScale: 1,
   initialScale: 1,
   width: "device-width",
@@ -37,7 +41,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${lora.variable} ${inter.variable}`}>
+    <html lang="es" className={`${fraunces.variable} ${dmSans.variable}`}>
       <body>{children}</body>
     </html>
   );

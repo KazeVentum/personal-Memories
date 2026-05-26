@@ -23,7 +23,7 @@ export default function LibraryPage() {
 
   return (
     <main className="min-h-screen flex flex-col px-6 pt-10 pb-24 max-w-md mx-auto w-full">
-      <h1 className="font-[family-name:var(--font-lora)] text-2xl text-[var(--fg)] mb-6">
+      <h1 className="font-[family-name:var(--font-fraunces)] text-2xl text-[var(--fg)] mb-6">
         Biblioteca
       </h1>
 

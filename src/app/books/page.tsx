@@ -32,35 +32,24 @@ function BookRow({
     setEditing(false);
   };
 
-  const inputClass = "px-2 py-1 border border-[var(--border)] rounded-lg bg-transparent text-sm text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]";
+  const inputClass = "w-full px-3 py-2.5 border border-[var(--border)] rounded-xl bg-transparent text-sm text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]";
 
   if (editing) {
     return (
-      <div className="flex flex-col gap-2 py-3 border-b border-[var(--border)]">
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Título"
-          className={inputClass}
-          autoFocus
-        />
-        <input
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          placeholder="Autor (opcional)"
-          className={inputClass}
-        />
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-2 py-4 border-b border-[var(--border)]">
+        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Título" className={inputClass} autoFocus />
+        <input value={author} onChange={(e) => setAuthor(e.target.value)} placeholder="Autor (opcional)" className={inputClass} />
+        <div className="flex gap-2 mt-1">
           <button
             onClick={handleSave}
             disabled={saving || !title.trim()}
-            className="px-3 py-1 text-xs bg-[var(--fg)] text-[var(--bg)] rounded-lg hover:opacity-80 disabled:opacity-50 transition-opacity"
+            className="flex-1 py-2.5 text-sm bg-[var(--fg)] text-[var(--bg)] rounded-xl hover:opacity-80 disabled:opacity-50 transition-opacity"
           >
             {saving ? "..." : "Guardar"}
           </button>
           <button
             onClick={handleCancel}
-            className="px-3 py-1 text-xs border border-[var(--border)] text-[var(--muted)] rounded-lg hover:border-[var(--accent)] transition-colors"
+            className="flex-1 py-2.5 text-sm border border-[var(--border)] text-[var(--muted)] rounded-xl hover:border-[var(--accent)] transition-colors"
           >
             Cancelar
           </button>
@@ -70,21 +59,21 @@ function BookRow({
   }
 
   return (
-    <div className="flex items-center justify-between py-3 border-b border-[var(--border)] group">
-      <div className="flex flex-col">
-        <span className="text-[var(--fg)] font-[family-name:var(--font-lora)]">{book.title}</span>
-        {book.author && <span className="text-sm text-[var(--muted)]">{book.author}</span>}
+    <div className="flex items-center justify-between py-4 border-b border-[var(--border)]">
+      <div className="flex flex-col gap-0.5 flex-1 min-w-0 mr-3">
+        <span className="text-[var(--fg)] font-[family-name:var(--font-fraunces)] truncate">{book.title}</span>
+        {book.author && <span className="text-sm text-[var(--muted)] truncate">{book.author}</span>}
       </div>
-      <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="flex items-center gap-3 flex-shrink-0">
         <button
           onClick={() => setEditing(true)}
-          className="text-xs text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
+          className="px-3 py-2 text-xs text-[var(--muted)] border border-[var(--border)] rounded-lg hover:text-[var(--fg)] hover:border-[var(--accent)] transition-colors"
         >
           Editar
         </button>
         <button
           onClick={() => onDelete(book.id)}
-          className="text-xs text-[var(--muted)] hover:text-[var(--danger)] transition-colors"
+          className="px-3 py-2 text-xs text-[var(--muted)] border border-[var(--border)] rounded-lg hover:text-[var(--danger)] hover:border-[var(--danger)] transition-colors"
         >
           Eliminar
         </button>
@@ -99,7 +88,7 @@ export default function BooksPage() {
   const [author, setAuthor] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const inputClass = "flex-1 px-3 py-2 border border-[var(--border)] rounded-lg bg-transparent text-sm text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]";
+  const inputClass = "w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-transparent text-sm text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,20 +101,20 @@ export default function BooksPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col px-6 pt-10 pb-24 max-w-md mx-auto w-full">
-      <h1 className="font-[family-name:var(--font-lora)] text-2xl text-[var(--fg)] mb-6">
+    <main className="min-h-screen flex flex-col px-5 pt-10 pb-32 max-w-md mx-auto w-full">
+      <h1 className="font-[family-name:var(--font-fraunces)] text-2xl text-[var(--fg)] mb-6">
         Mis libros
       </h1>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-8">
         <input type="text" placeholder="Título *" value={title} onChange={(e) => setTitle(e.target.value)} required className={inputClass} />
-        <input type="text" placeholder="Autor" value={author} onChange={(e) => setAuthor(e.target.value)} className={inputClass} />
+        <input type="text" placeholder="Autor (opcional)" value={author} onChange={(e) => setAuthor(e.target.value)} className={inputClass} />
         <button
           type="submit"
           disabled={saving || !title.trim()}
-          className="px-4 py-2 bg-[var(--fg)] text-[var(--bg)] text-sm rounded-lg hover:opacity-80 disabled:opacity-50 transition-opacity"
+          className="w-full py-3 mt-1 bg-[var(--fg)] text-[var(--bg)] text-sm font-medium rounded-xl hover:opacity-80 disabled:opacity-50 transition-opacity"
         >
-          +
+          {saving ? "Guardando..." : "Agregar libro"}
         </button>
       </form>
 
