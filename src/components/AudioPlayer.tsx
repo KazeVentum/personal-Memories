@@ -9,11 +9,16 @@ function formatTime(s: number): string {
   return `${m}:${sec.toString().padStart(2, "0")}`;
 }
 
-export function AudioPlayer({ audioPath }: { audioPath: string }) {
+interface Props {
+  audioPath: string;
+  durationSeconds?: number | null;
+}
+
+export function AudioPlayer({ audioPath, durationSeconds }: Props) {
   const [url, setUrl] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(durationSeconds ?? 0);
   const [error, setError] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -31,8 +36,11 @@ export function AudioPlayer({ audioPath }: { audioPath: string }) {
   useEffect(() => {
     if (!url) return;
     const audio = new Audio(url);
+    audio.preload = "metadata";
     audioRef.current = audio;
-    audio.onloadedmetadata = () => setDuration(audio.duration);
+    audio.onloadedmetadata = () => {
+      if (isFinite(audio.duration)) setDuration(audio.duration);
+    };
     audio.ontimeupdate = () => setCurrentTime(audio.currentTime);
     audio.onended = () => { setPlaying(false); setCurrentTime(0); };
     return () => { audio.pause(); audio.src = ""; };
@@ -56,7 +64,18 @@ export function AudioPlayer({ audioPath }: { audioPath: string }) {
   const progress = duration ? (currentTime / duration) * 100 : 0;
 
   if (error) return <p className="text-sm text-[var(--muted)]">No se pudo cargar el audio.</p>;
-  if (!url) return <p className="text-sm text-[var(--muted)] animate-pulse">Cargando...</p>;
+  if (!url) return (
+    <div className="flex items-center gap-3 mt-3 p-3 rounded-xl bg-[var(--surface)]">
+      <div className="w-9 h-9 rounded-full bg-[var(--border)] animate-pulse flex-shrink-0" />
+      <div className="flex-1 flex flex-col gap-1.5">
+        <div className="h-1.5 bg-[var(--border)] rounded-full animate-pulse" />
+        <div className="flex justify-between text-xs text-[var(--muted)]">
+          <span>0:00</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex items-center gap-3 mt-3 p-3 rounded-xl bg-[var(--surface)]">
