@@ -7,7 +7,7 @@ import type { Book } from "@/types";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 16, scale: 0.97 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 300, damping: 28 } },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 300, damping: 28 } },
   exit: { opacity: 0, x: -20, scale: 0.97, transition: { duration: 0.2 } },
 };
 
