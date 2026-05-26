@@ -1,0 +1,74 @@
+"use client";
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { ThemeToggle } from "@/components/ThemeToggle";
+
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) { setError(error.message); setLoading(false); }
+    else setSent(true);
+  };
+
+  if (sent) {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-[var(--bg)]">
+        <div className="text-center max-w-sm flex flex-col gap-3">
+          <h1 className="font-[family-name:var(--font-lora)] text-2xl text-[var(--fg)]">
+            Revisá tu email
+          </h1>
+          <p className="text-sm text-[var(--muted)]">
+            Enviamos un link a <strong>{email}</strong>. Hacé click en él para ingresar.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-[var(--bg)]">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      <div className="w-full max-w-sm flex flex-col gap-6">
+        <div className="text-center">
+          <h1 className="font-[family-name:var(--font-lora)] text-2xl text-[var(--fg)] mb-2">
+            Reflexiones
+          </h1>
+          <p className="text-sm text-[var(--muted)]">Ingresá tu email para continuar</p>
+        </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <input
+            type="email"
+            placeholder="tu@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoFocus
+            className="px-4 py-3 border border-[var(--border)] rounded-xl bg-transparent text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]"
+          />
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="py-3 bg-[var(--fg)] text-[var(--bg)] rounded-xl hover:opacity-80 disabled:opacity-50 transition-opacity"
+          >
+            {loading ? "Enviando..." : "Enviar link"}
+          </button>
+        </form>
+      </div>
+    </main>
+  );
+}
