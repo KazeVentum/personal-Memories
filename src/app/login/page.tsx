@@ -5,24 +5,33 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setError("Email o contraseña incorrectos");
-      setLoading(false);
+
+    if (mode === "login") {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) { setError("Email o contraseña incorrectos"); setLoading(false); }
+      else router.push("/");
     } else {
-      router.push("/");
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) { setError(error.message); setLoading(false); }
+      else setSuccess("¡Cuenta creada! Ya podés ingresar.");
+      setLoading(false);
     }
   };
+
+  const inputClass = "px-4 py-3 border border-[var(--border)] rounded-xl bg-transparent text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]";
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-[var(--bg)]">
@@ -31,8 +40,11 @@ export default function LoginPage() {
           <h1 className="font-[family-name:var(--font-fraunces)] text-2xl text-[var(--fg)] mb-2">
             Reflexiones
           </h1>
-          <p className="text-sm text-[var(--muted)]">Ingresá tus credenciales para continuar</p>
+          <p className="text-sm text-[var(--muted)]">
+            {mode === "login" ? "Ingresá tus credenciales" : "Creá tu cuenta personal"}
+          </p>
         </div>
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             type="email"
@@ -41,7 +53,7 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
             autoFocus
-            className="px-4 py-3 border border-[var(--border)] rounded-xl bg-transparent text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]"
+            className={inputClass}
           />
           <input
             type="password"
@@ -49,17 +61,25 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="px-4 py-3 border border-[var(--border)] rounded-xl bg-transparent text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]"
+            className={inputClass}
           />
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-sm text-[var(--danger)]">{error}</p>}
+          {success && <p className="text-sm text-[var(--accent)]">{success}</p>}
           <button
             type="submit"
             disabled={loading}
-            className="py-3 bg-[var(--fg)] text-[var(--bg)] rounded-xl hover:opacity-80 disabled:opacity-50 transition-opacity"
+            className="py-3 bg-[var(--fg)] text-[var(--bg)] rounded-xl hover:opacity-80 disabled:opacity-50 transition-opacity font-medium"
           >
-            {loading ? "Ingresando..." : "Ingresar"}
+            {loading ? "..." : mode === "login" ? "Ingresar" : "Crear cuenta"}
           </button>
         </form>
+
+        <button
+          onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(null); setSuccess(null); }}
+          className="text-sm text-[var(--muted)] hover:text-[var(--fg)] transition-colors text-center"
+        >
+          {mode === "login" ? "¿No tenés cuenta? Registrate" : "¿Ya tenés cuenta? Ingresá"}
+        </button>
       </div>
     </main>
   );
