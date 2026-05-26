@@ -18,3 +18,16 @@ export interface Reflection {
   created_at: string;
   books?: Book;
 }
+
+export interface Quote {
+  id: string;
+  user_id: string;
+  book_id: string | null;
+  page_number: number | null;
+  quote_text: string;
+  notes: string | null;
+  tags: string[];
+  created_at: string;
+  books?: Book;
+}
+

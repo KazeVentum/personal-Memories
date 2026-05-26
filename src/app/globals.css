@@ -2,45 +2,45 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --bg: #f7f4f0;
-  --fg: #18140f;
-  --muted: #7a7268;
-  --border: #e2ddd8;
-  --accent: #e8621a;
-  --surface: #edeae5;
-  --danger: #e05252;
+  --bg: #f5f0e8;
+  --fg: #1c1812;
+  --muted: #62594a; /* Optimizado para contraste accesible en modo claro */
+  --border: #ddd8cf;
+  --accent: #b5784a;
+  --surface: #ede8de;
+  --danger: #c05050;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --bg: #000000;
-    --fg: #f0ece8;
-    --muted: #9a9290;
-    --border: #222222;
-    --accent: #ff6b35;
-    --surface: #0f0f0f;
-    --danger: #ff5252;
+    --bg: #000000; /* Negro puro para pantallas AMOLED */
+    --fg: #e8ddc8; /* Crema suave de lectura */
+    --muted: #8a8073; /* Tono cálido con contraste accesible nocturno */
+    --border: #1c1813;
+    --accent: #dca073; /* Terracota/ámbar luminoso */
+    --surface: #0a0907; /* Obsidiana oscura */
+    --danger: #e07070;
   }
 }
 
 .dark {
   --bg: #000000;
-  --fg: #f0ece8;
-  --muted: #9a9290;
-  --border: #222222;
-  --accent: #ff6b35;
-  --surface: #0f0f0f;
-  --danger: #ff5252;
+  --fg: #e8ddc8;
+  --muted: #8a8073;
+  --border: #1c1813;
+  --accent: #dca073;
+  --surface: #0a0907;
+  --danger: #e07070;
 }
 
 .light {
-  --bg: #f7f4f0;
-  --fg: #18140f;
-  --muted: #7a7268;
-  --border: #e2ddd8;
-  --accent: #e8621a;
-  --surface: #edeae5;
-  --danger: #e05252;
+  --bg: #f5f0e8;
+  --fg: #1c1812;
+  --muted: #62594a;
+  --border: #ddd8cf;
+  --accent: #b5784a;
+  --surface: #ede8de;
+  --danger: #c05050;
 }
 
 html {
