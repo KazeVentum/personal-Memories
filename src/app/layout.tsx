@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { GlobalUI } from "@/components/GlobalUI";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -42,7 +43,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${fraunces.variable} ${dmSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <GlobalUI />
+        {children}
+      </body>
     </html>
   );
 }

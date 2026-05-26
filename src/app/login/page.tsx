@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,9 +26,6 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-[var(--bg)]">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
       <div className="w-full max-w-sm flex flex-col gap-6">
         <div className="text-center">
           <h1 className="font-[family-name:var(--font-fraunces)] text-2xl text-[var(--fg)] mb-2">
