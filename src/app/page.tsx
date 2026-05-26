@@ -7,7 +7,7 @@ import { useReflections } from "@/lib/hooks/useReflections";
 import { useQuotes } from "@/lib/hooks/useQuotes";
 import { ReflectionForm } from "@/components/ReflectionForm";
 import { BottomNav } from "@/components/BottomNav";
-import { HoldRecordButton } from "@/components/HoldRecordButton";
+import { RecordButton } from "@/components/RecordButton";
 
 const PROMPTS = [
   "¿Qué pensamiento no podés soltar después de hoy?",
@@ -171,7 +171,7 @@ export default function Home() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <HoldRecordButton state={state} elapsed={elapsed} onStart={start} onStop={stop} />
+        <RecordButton state={state} onStart={start} onStop={stop} />
         <AnimatePresence mode="wait">
           <motion.p
             key={state}
@@ -182,8 +182,8 @@ export default function Home() {
             transition={{ duration: 0.2 }}
           >
             {state === "recording"
-              ? `Grabando… ${elapsed}s — soltá para guardar`
-              : "Mantené presionado para capturar un pensamiento"}
+              ? `Grabando… ${elapsed}s`
+              : "Tocá para capturar un pensamiento"}
           </motion.p>
         </AnimatePresence>
       </motion.div>

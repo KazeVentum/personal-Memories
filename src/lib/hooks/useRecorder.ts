@@ -23,16 +23,21 @@ export function useRecorder() {
     chunksRef.current = [];
     setElapsed(0);
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-      ? "audio/webm;codecs=opus"
-      : "audio/webm";
-    const mr = new MediaRecorder(stream, { mimeType });
+    const candidates = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4;codecs=mp4a.40.2",
+      "audio/mp4",
+      "audio/ogg;codecs=opus",
+    ];
+    const mimeType = candidates.find((t) => MediaRecorder.isTypeSupported(t)) ?? "";
+    const mr = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
     mr.ondataavailable = (e) => {
       if (e.data.size > 0) chunksRef.current.push(e.data);
     };
     mr.onstop = () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
-      const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+      const blob = new Blob(chunksRef.current, { type: mr.mimeType || mimeType });
       const finalDuration = Math.round((Date.now() - startTimeRef.current) / 1000);
       setAudioBlob(blob);
       setDuration(finalDuration);

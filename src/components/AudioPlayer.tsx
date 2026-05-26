@@ -50,7 +50,7 @@ export function AudioPlayer({ audioPath, durationSeconds }: Props) {
     const audio = audioRef.current;
     if (!audio) return;
     if (playing) { audio.pause(); setPlaying(false); }
-    else { audio.play(); setPlaying(true); }
+    else { audio.play().then(() => setPlaying(true)).catch(() => setError(true)); }
   };
 
   const seek = (e: React.MouseEvent<HTMLDivElement>) => {

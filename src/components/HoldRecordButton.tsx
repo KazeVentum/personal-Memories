@@ -1,4 +1,5 @@
 "use client";
+import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 export function HoldRecordButton({ state, elapsed, onStart, onStop }: Props) {
   const isRecording = state === "recording";
+  const isTouchRef = useRef(false);
 
   const handleStart = () => {
     if (state === "idle") onStart();
@@ -36,12 +38,12 @@ export function HoldRecordButton({ state, elapsed, onStart, onStop }: Props) {
       </AnimatePresence>
 
       <motion.button
-        onMouseDown={handleStart}
-        onMouseUp={handleStop}
-        onMouseLeave={handleStop}
-        onTouchStart={(e) => { e.preventDefault(); handleStart(); }}
-        onTouchEnd={handleStop}
-        onTouchCancel={handleStop}
+        onMouseDown={() => { if (!isTouchRef.current) handleStart(); }}
+        onMouseUp={() => { if (!isTouchRef.current) handleStop(); }}
+        onMouseLeave={() => { if (!isTouchRef.current) handleStop(); }}
+        onTouchStart={(e) => { e.preventDefault(); isTouchRef.current = true; handleStart(); }}
+        onTouchEnd={() => { isTouchRef.current = false; handleStop(); }}
+        onTouchCancel={() => { isTouchRef.current = false; handleStop(); }}
         animate={isRecording
           ? { scale: 1.12, backgroundColor: "var(--danger)" }
           : { scale: 1, backgroundColor: "var(--accent)" }

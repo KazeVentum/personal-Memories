@@ -30,11 +30,14 @@ export function ReflectionForm({ audioBlob, duration, onSaved, onCancel }: Props
       if (!user) throw new Error("No autenticado");
 
       const reflectionId = crypto.randomUUID();
-      const path = `${user.id}/${reflectionId}.webm`;
+      const ext = audioBlob.type.includes("mp4") ? "mp4"
+        : audioBlob.type.includes("ogg") ? "ogg"
+        : "webm";
+      const path = `${user.id}/${reflectionId}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
         .from("reflections")
-        .upload(path, audioBlob, { contentType: "audio/webm" });
+        .upload(path, audioBlob, { contentType: audioBlob.type || "audio/webm" });
       if (uploadError) throw uploadError;
 
       const { error: insertError } = await supabase.from("reflections").insert({
