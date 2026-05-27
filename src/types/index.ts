@@ -3,7 +3,23 @@ export interface Book {
   user_id: string;
   title: string;
   author: string | null;
+  total_pages: number | null;
+  current_page: number;
   created_at: string;
+}
+
+export interface ReadingLog {
+  id: string;
+  user_id: string;
+  book_id: string;
+  pages_read: number;
+  logged_at: string;
+  created_at: string;
+}
+
+export interface DailyActivity {
+  date: string;
+  count: number;
 }
 
 export interface Reflection {
