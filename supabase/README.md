@@ -1,15 +1,98 @@
 # Supabase Setup
 
-1. Crear proyecto en supabase.com
-2. Copiar URL y anon key a `.env.local`
-3. Ejecutar en SQL Editor: `schema.sql` → luego `storage.sql`
+## Setup inicial (proyecto nuevo)
+
+1. Crear proyecto en [supabase.com](https://supabase.com)
+2. Copiar URL y anon key a `.env.local`:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+   ```
+3. Ejecutar en SQL Editor en este orden:
+   - `schema.sql` — crea todas las tablas, índices, RLS y funciones
+   - `storage.sql` — crea el bucket de audio con sus políticas
 4. Authentication → Providers → Email → verificar que "Enable email provider" esté activo
-   - No hay toggle separado para Magic Link — funciona automáticamente con el provider de email habilitado
 5. Authentication → URL Configuration:
    - Site URL: `http://localhost:3000`
    - Redirect URLs: agregar `http://localhost:3000/auth/callback`
 
+## Migraciones (proyecto existente)
+
+Aplicar en orden sobre una base ya existente:
+
+| Archivo | Descripción |
+|---------|-------------|
+| `migration_add_title.sql` | Agrega columna `title` a `reflections` |
+| `migration_add_notes.sql` | Agrega columna `notes` a `reflections` |
+| `migration_add_quotes.sql` | Crea tabla `quotes` |
+| `migration_reading_tracker.sql` | Agrega `total_pages` y `current_page` a `books`, crea tabla `reading_logs` y función `upsert_reading_log` |
+
+## Esquema actual
+
+### `books`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users |
+| `title` | TEXT | Título del libro |
+| `author` | TEXT | Autor (opcional) |
+| `total_pages` | INTEGER | Total de páginas (opcional, para tracking) |
+| `current_page` | INTEGER | Página actual leída (default 0) |
+| `created_at` | TIMESTAMPTZ | Fecha de creación |
+
+### `reflections`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users |
+| `book_id` | UUID | FK → books (opcional) |
+| `page_number` | INTEGER | Página de referencia (opcional) |
+| `title` | TEXT | Título de la reflexión (opcional) |
+| `audio_path` | TEXT | Ruta en Storage bucket |
+| `duration_seconds` | INTEGER | Duración del audio |
+| `tags` | TEXT[] | Array de tags |
+| `notes` | TEXT | Notas escritas (opcional) |
+| `created_at` | TIMESTAMPTZ | Fecha de creación |
+
+### `quotes`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users |
+| `book_id` | UUID | FK → books (opcional) |
+| `page_number` | INTEGER | Página de la cita (opcional) |
+| `quote_text` | TEXT | Texto de la cita |
+| `notes` | TEXT | Interpretación personal (opcional) |
+| `tags` | TEXT[] | Array de tags |
+| `created_at` | TIMESTAMPTZ | Fecha de creación |
+
+### `reading_logs`
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `id` | UUID | PK |
+| `user_id` | UUID | FK → auth.users |
+| `book_id` | UUID | FK → books |
+| `pages_read` | INTEGER | Páginas leídas ese día (acumulativo) |
+| `logged_at` | DATE | Fecha del registro |
+| `created_at` | TIMESTAMPTZ | Timestamp de inserción |
+
+Índice único en `(user_id, book_id, logged_at)` — un registro por libro por día.
+
+### Función: `upsert_reading_log`
+```sql
+upsert_reading_log(p_user_id, p_book_id, p_pages_read, p_logged_at)
+```
+Inserta o acumula páginas leídas en `reading_logs`. Si ya existe un registro para ese libro/día, suma el delta en vez de reemplazar.
+
+## Storage
+
+Bucket `reflections` (privado):
+- Max size: 50 MB
+- Tipos permitidos: `audio/webm`, `audio/ogg`, `audio/mp4`, `audio/mpeg`
+- Path format: `{user_id}/{reflectionId}.{ext}`
+- RLS: cada usuario solo accede a su carpeta
+
 ## Notas
 
-- El Magic Link se envía vía `supabase.auth.signInWithOtp({ email })`, no requiere configuración adicional
-- Para producción: reemplazar `http://localhost:3000` por la URL real del deploy en ambos campos
+- RLS habilitado en todas las tablas — datos completamente aislados por usuario
+- Para producción: reemplazar `http://localhost:3000` por la URL real del deploy
