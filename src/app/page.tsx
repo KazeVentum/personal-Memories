@@ -71,7 +71,7 @@ function RecentReflection() {
     >
       <p className="text-[10px] uppercase tracking-widest text-[var(--muted)] mb-2">Última reflexión</p>
       <p className="text-sm font-[family-name:var(--font-fraunces)] text-[var(--fg)] truncate">
-        {latest.books?.title ?? <span className="italic text-[var(--muted)]">Sin libro</span>}
+        {latest.title ?? latest.books?.title ?? <span className="italic text-[var(--muted)]">Sin título</span>}
       </p>
       <div className="flex items-center gap-2 mt-1.5 text-xs text-[var(--muted)]">
         <span>{new Date(latest.created_at).toLocaleDateString("es-AR", { day: "numeric", month: "short" })}</span>

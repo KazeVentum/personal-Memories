@@ -1,0 +1,1 @@
+ALTER TABLE reflections ADD COLUMN IF NOT EXISTS title TEXT;

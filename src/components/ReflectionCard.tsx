@@ -9,7 +9,7 @@ import { TagInput } from "@/components/TagInput";
 interface Props {
   reflection: Reflection;
   onDelete: (id: string, audioPath: string) => void;
-  onUpdate: (id: string, updates: Partial<Pick<Reflection, "book_id" | "page_number" | "tags" | "notes">>) => Promise<boolean>;
+  onUpdate: (id: string, updates: Partial<Pick<Reflection, "title" | "book_id" | "page_number" | "tags" | "notes">>) => Promise<boolean>;
 }
 
 function formatDuration(seconds: number | null): string {
@@ -30,6 +30,7 @@ function formatDate(dateStr: string): string {
 export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [title, setTitle] = useState(reflection.title ?? "");
   const [bookId, setBookId] = useState<string | null>(reflection.book_id);
   const [pageNumber, setPageNumber] = useState(reflection.page_number?.toString() ?? "");
   const [tags, setTags] = useState<string[]>(reflection.tags);
@@ -46,6 +47,7 @@ export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
     e.stopPropagation();
     setSaving(true);
     const ok = await onUpdate(reflection.id, {
+      title: title.trim() || null,
       book_id: bookId,
       page_number: pageNumber ? parseInt(pageNumber, 10) : null,
       tags,
@@ -57,6 +59,7 @@ export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
 
   const handleCancel = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setTitle(reflection.title ?? "");
     setBookId(reflection.book_id);
     setPageNumber(reflection.page_number?.toString() ?? "");
     setTags(reflection.tags);
@@ -80,11 +83,14 @@ export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
           )}
         </div>
         <p className="text-[var(--fg)] font-[family-name:var(--font-fraunces)] truncate">
-          {reflection.books?.title ?? <span className="text-[var(--muted)] italic">Sin libro</span>}
+          {reflection.title ?? <span className="text-[var(--muted)] italic">{reflection.books?.title ?? "Sin título"}</span>}
           {reflection.page_number && (
             <span className="text-[var(--muted)] text-sm ml-2">p. {reflection.page_number}</span>
           )}
         </p>
+        {reflection.title && reflection.books?.title && (
+          <p className="text-xs text-[var(--muted)] truncate">{reflection.books.title}</p>
+        )}
         {reflection.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-0.5">
             {reflection.tags.map((tag) => (
@@ -138,6 +144,16 @@ export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
             className="overflow-hidden"
           >
             <div className="flex flex-col gap-3 mt-3 pt-3 border-t border-[var(--border)]">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs text-[var(--muted)]">Título</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Dale un nombre a esta reflexión"
+                  className={inputClass}
+                />
+              </div>
               <div className="flex flex-col gap-1">
                 <label className="text-xs text-[var(--muted)]">Libro</label>
                 <BookPicker value={bookId} onChange={setBookId} />

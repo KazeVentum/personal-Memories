@@ -9,6 +9,7 @@ export interface Book {
 export interface Reflection {
   id: string;
   user_id: string;
+  title: string | null;
   book_id: string | null;
   page_number: number | null;
   audio_path: string;

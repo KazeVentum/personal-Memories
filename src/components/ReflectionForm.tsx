@@ -12,6 +12,7 @@ interface Props {
 }
 
 export function ReflectionForm({ audioBlob, duration, onSaved, onCancel }: Props) {
+  const [title, setTitle] = useState("");
   const [bookId, setBookId] = useState<string | null>(null);
   const [pageNumber, setPageNumber] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -43,6 +44,7 @@ export function ReflectionForm({ audioBlob, duration, onSaved, onCancel }: Props
       const { error: insertError } = await supabase.from("reflections").insert({
         id: reflectionId,
         user_id: user.id,
+        title: title.trim() || null,
         book_id: bookId,
         page_number: pageNumber ? parseInt(pageNumber, 10) : null,
         audio_path: path,
@@ -64,6 +66,17 @@ export function ReflectionForm({ audioBlob, duration, onSaved, onCancel }: Props
       <h2 className="font-[family-name:var(--font-fraunces)] text-lg text-[var(--fg)]">
         Guardar reflexión
       </h2>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-sm text-[var(--muted)]">Título</label>
+        <input
+          type="text"
+          placeholder="Dale un nombre a esta reflexión"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className={inputClass}
+        />
+      </div>
 
       <div className="flex flex-col gap-1">
         <label className="text-sm text-[var(--muted)]">Libro</label>
