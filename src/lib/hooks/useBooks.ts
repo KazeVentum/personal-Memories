@@ -20,12 +20,12 @@ export function useBooks() {
     { revalidateOnFocus: false }
   );
 
-  const addBook = async (title: string, author?: string): Promise<Book | null> => {
+  const addBook = async (title: string, author?: string, totalPages?: number): Promise<Book | null> => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return null;
     const { data, error } = await supabase
       .from("books")
-      .insert({ title, author: author || null, user_id: user.id })
+      .insert({ title, author: author || null, user_id: user.id, total_pages: totalPages ?? null })
       .select()
       .single();
     if (!error && data) {
@@ -35,20 +35,54 @@ export function useBooks() {
     return null;
   };
 
-  const updateBook = async (id: string, title: string, author?: string): Promise<boolean> => {
+  const updateBook = async (
+    id: string,
+    title: string,
+    author?: string,
+    totalPages?: number
+  ): Promise<boolean> => {
     const { error } = await supabase
       .from("books")
-      .update({ title, author: author || null })
+      .update({ title, author: author || null, total_pages: totalPages ?? null })
       .eq("id", id);
     if (!error) {
       mutate(
-        books.map((b) => b.id === id ? { ...b, title, author: author || null } : b)
+        books.map((b) => b.id === id ? { ...b, title, author: author || null, total_pages: totalPages ?? null } : b)
           .sort((a, b) => a.title.localeCompare(b.title)),
         false
       );
       return true;
     }
     return false;
+  };
+
+  const updateCurrentPage = async (id: string, newPage: number, previousPage: number): Promise<boolean> => {
+    const { error } = await supabase
+      .from("books")
+      .update({ current_page: newPage })
+      .eq("id", id);
+    if (error) return false;
+
+    mutate(
+      books.map((b) => b.id === id ? { ...b, current_page: newPage } : b),
+      false
+    );
+
+    const delta = newPage - previousPage;
+    if (delta > 0) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const today = new Date().toISOString().split("T")[0];
+        await supabase.rpc("upsert_reading_log", {
+          p_user_id: user.id,
+          p_book_id: id,
+          p_pages_read: delta,
+          p_logged_at: today,
+        });
+      }
+    }
+
+    return true;
   };
 
   const deleteBook = async (id: string): Promise<boolean> => {
@@ -60,5 +94,5 @@ export function useBooks() {
     return false;
   };
 
-  return { books, loading, addBook, updateBook, deleteBook, refetch: () => mutate() };
+  return { books, loading, addBook, updateBook, deleteBook, updateCurrentPage, refetch: () => mutate() };
 }
