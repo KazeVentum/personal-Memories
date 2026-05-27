@@ -1,13 +1,16 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRecorder } from "@/lib/hooks/useRecorder";
-import { useReflections } from "@/lib/hooks/useReflections";
+import { useBooks } from "@/lib/hooks/useBooks";
 import { useQuotes } from "@/lib/hooks/useQuotes";
 import { ReflectionForm } from "@/components/ReflectionForm";
 import { BottomNav } from "@/components/BottomNav";
 import { RecordButton } from "@/components/RecordButton";
+import { BookProgressBar } from "@/components/BookProgressBar";
+import { PageUpdateSheet } from "@/components/PageUpdateSheet";
+import type { Book } from "@/types";
 
 const PROMPTS = [
   "¿Qué pensamiento no podés soltar después de hoy?",
@@ -48,46 +51,51 @@ function getDayIndex(len: number): number {
   return new Date().getDate() % len;
 }
 
-function formatDuration(seconds: number | null): string {
-  if (!seconds) return "";
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
+function BooksInProgress({ onOpenSheet }: { onOpenSheet: (book: Book) => void }) {
+  const { books } = useBooks();
+  const tracked = books.filter((b) => b.total_pages !== null);
 
-function RecentReflection() {
-  const { reflections, loading } = useReflections();
-  const latest = reflections[0];
-
-  if (loading || !latest) return null;
+  if (tracked.length === 0) return null;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.5 }}
-      className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4"
-      style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.12)" }}
+      transition={{ duration: 0.5, delay: 0.45 }}
+      className="flex flex-col gap-3"
     >
-      <p className="text-[10px] uppercase tracking-widest text-[var(--muted)] mb-2">Última reflexión</p>
-      <p className="text-sm font-[family-name:var(--font-fraunces)] text-[var(--fg)] truncate">
-        {latest.title ?? latest.books?.title ?? <span className="italic text-[var(--muted)]">Sin título</span>}
-      </p>
-      <div className="flex items-center gap-2 mt-1.5 text-xs text-[var(--muted)]">
-        <span>{new Date(latest.created_at).toLocaleDateString("es-AR", { day: "numeric", month: "short" })}</span>
-        {latest.duration_seconds && <span>· {formatDuration(latest.duration_seconds)}</span>}
-        {latest.tags.slice(0, 2).map(t => (
-          <span key={t} className="px-1.5 py-0.5 rounded-full bg-[var(--border)] text-[var(--muted)]">{t}</span>
-        ))}
-      </div>
+      <p className="text-[10px] uppercase tracking-widest text-[var(--muted)]">En progreso</p>
+      {tracked.map((book) => (
+        <div
+          key={book.id}
+          className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4"
+          style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}
+        >
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div className="flex-1 min-w-0">
+              <p className="font-[family-name:var(--font-fraunces)] text-[var(--fg)] truncate">{book.title}</p>
+              {book.author && <p className="text-xs text-[var(--muted)] truncate mt-0.5">{book.author}</p>}
+            </div>
+            <button
+              onClick={() => onOpenSheet(book)}
+              className="flex-shrink-0 px-4 py-2.5 text-sm font-medium text-[var(--bg)] bg-[var(--accent)] rounded-xl active:opacity-80 transition-opacity"
+            >
+              {book.current_page === 0 ? "Iniciar" : "Actualizar"}
+            </button>
+          </div>
+          <BookProgressBar current={book.current_page} total={book.total_pages} />
+        </div>
+      ))}
     </motion.div>
   );
 }
 
 export default function Home() {
   const { state, audioBlob, duration, elapsed, start, stop, reset } = useRecorder();
+  const { updateCurrentPage } = useBooks();
   const router = useRouter();
   const { quotes } = useQuotes();
+  const [sheetBook, setSheetBook] = useState<Book | null>(null);
 
   const combinedQuotes = useMemo(() => {
     const userQuotes = quotes.map((q) => ({
@@ -122,11 +130,10 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col px-5 pt-14 pb-36 max-w-md mx-auto w-full">
+    <main className="min-h-screen flex flex-col px-5 pt-14 pb-36 max-w-md mx-auto w-full gap-4">
 
       {/* Greeting */}
       <motion.div
-        className="mb-7"
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -139,7 +146,7 @@ export default function Home() {
 
       {/* Quote card */}
       <motion.div
-        className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 mb-4"
+        className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5"
         style={{ boxShadow: "0 2px 20px rgba(0,0,0,0.10)" }}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -154,7 +161,7 @@ export default function Home() {
 
       {/* Reflection prompt */}
       <motion.div
-        className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-4 mb-8"
+        className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-4"
         style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -166,7 +173,7 @@ export default function Home() {
 
       {/* Hold-to-record */}
       <motion.div
-        className="flex flex-col items-center gap-4 mb-8"
+        className="flex flex-col items-center gap-4 py-2"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}
@@ -188,8 +195,14 @@ export default function Home() {
         </AnimatePresence>
       </motion.div>
 
-      {/* Recent reflection */}
-      <RecentReflection />
+      {/* Books in progress */}
+      <BooksInProgress onOpenSheet={setSheetBook} />
+
+      <PageUpdateSheet
+        book={sheetBook}
+        onClose={() => setSheetBook(null)}
+        onUpdate={updateCurrentPage}
+      />
 
       <BottomNav />
     </main>

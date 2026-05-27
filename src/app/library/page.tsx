@@ -7,12 +7,15 @@ import { useQuotes } from "@/lib/hooks/useQuotes";
 import { ReflectionCard } from "@/components/ReflectionCard";
 import { QuoteCard } from "@/components/QuoteCard";
 import { QuoteForm } from "@/components/QuoteForm";
+import { QuoteEditSheet } from "@/components/QuoteEditSheet";
 import { BottomNav } from "@/components/BottomNav";
+import type { Quote } from "@/types";
 
 export default function LibraryPage() {
   const [activeTab, setActiveTab] = useState<"reflections" | "quotes">("reflections");
   const [selectedBookId, setSelectedBookId] = useState<string | undefined>();
   const [selectedTag, setSelectedTag] = useState<string | undefined>();
+  const [editingQuote, setEditingQuote] = useState<Quote | null>(null);
 
   const { reflections, loading: loadingReflections, deleteReflection, updateReflection } = useReflections({
     bookId: selectedBookId,
@@ -126,73 +129,45 @@ export default function LibraryPage() {
         )}
       </motion.div>
 
-      {/* Formulario para agregar citas (solo en la pestaña de citas) */}
-      {activeTab === "quotes" && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          <QuoteForm onSave={addQuote} />
-        </motion.div>
-      )}
-
-      {/* Contenedor principal de items */}
+      {/* Todo el contenido del tab en un solo bloque keyed — sin elementos sueltos fuera */}
       <AnimatePresence mode="wait">
-        {loading && (
-          <motion.p
-            key="loading"
-            className="text-sm text-[var(--muted)] text-center py-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            Cargando...
-          </motion.p>
-        )}
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.18 }}
+          className="flex flex-col gap-3.5"
+        >
+          {activeTab === "quotes" && <QuoteForm onSave={addQuote} />}
 
-        {!loading && itemsCount === 0 && (
-          <motion.p
-            key="empty"
-            className="text-sm text-[var(--muted)] text-center py-12 leading-relaxed"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {activeTab === "reflections"
-              ? "Aún no hay reflexiones. Mantené presionado el grabador y compartí tu primer pensamiento."
-              : "Aún no agregaste citas textuales. Desplegá el formulario superior e ingresá tu primera cita."}
-          </motion.p>
-        )}
+          {loading && (
+            <p className="text-sm text-[var(--muted)] text-center py-12">Cargando...</p>
+          )}
+
+          {!loading && itemsCount === 0 && (
+            <p className="text-sm text-[var(--muted)] text-center py-12 leading-relaxed">
+              {activeTab === "reflections"
+                ? "Aún no hay reflexiones. Mantené presionado el grabador y compartí tu primer pensamiento."
+                : "Aún no agregaste citas textuales. Desplegá el formulario superior e ingresá tu primera cita."}
+            </p>
+          )}
+
+          {!loading && activeTab === "reflections" && reflections.map((r) => (
+            <ReflectionCard key={r.id} reflection={r} onDelete={deleteReflection} onUpdate={updateReflection} />
+          ))}
+
+          {!loading && activeTab === "quotes" && quotes.map((q) => (
+            <QuoteCard key={q.id} quote={q} onDelete={deleteQuote} onEdit={setEditingQuote} />
+          ))}
+        </motion.div>
       </AnimatePresence>
 
-      <motion.div className="flex flex-col gap-3.5">
-        <AnimatePresence initial={false}>
-          {!loading && activeTab === "reflections"
-            ? reflections.map((r, i) => (
-                <motion.div
-                  key={r.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, x: -20, scale: 0.97 }}
-                  transition={{ duration: 0.25, delay: i * 0.03 }}
-                >
-                  <ReflectionCard reflection={r} onDelete={deleteReflection} onUpdate={updateReflection} />
-                </motion.div>
-              ))
-            : !loading && quotes.map((q, i) => (
-                <motion.div
-                  key={q.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, x: -20, scale: 0.97 }}
-                  transition={{ duration: 0.25, delay: i * 0.03 }}
-                >
-                  <QuoteCard quote={q} onDelete={deleteQuote} onUpdate={updateQuote} />
-                </motion.div>
-              ))}
-        </AnimatePresence>
-      </motion.div>
+      <QuoteEditSheet
+        quote={editingQuote}
+        onClose={() => setEditingQuote(null)}
+        onSave={updateQuote}
+      />
 
       <BottomNav />
     </main>
