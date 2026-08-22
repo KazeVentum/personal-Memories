@@ -5,6 +5,7 @@ import type { Reflection } from "@/types";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { BookPicker } from "@/components/BookPicker";
 import { TagInput } from "@/components/TagInput";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 interface Props {
   reflection: Reflection;
@@ -36,11 +37,11 @@ export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
   const [tags, setTags] = useState<string[]>(reflection.tags);
   const [notes, setNotes] = useState(reflection.notes ?? "");
   const [saving, setSaving] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const handleDelete = () => {
-    if (window.confirm("¿Eliminar esta reflexión?")) {
-      onDelete(reflection.id, reflection.audio_path);
-    }
+    onDelete(reflection.id, reflection.audio_path);
+    setConfirmingDelete(false);
   };
 
   const handleSave = async (e: React.MouseEvent) => {
@@ -125,7 +126,7 @@ export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
                 Editar
               </button>
               <button
-                onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+                onClick={(e) => { e.stopPropagation(); setConfirmingDelete(true); }}
                 className="flex-1 py-3 text-sm border border-[var(--border)] text-[var(--muted)] rounded-xl hover:border-[var(--danger)] hover:text-[var(--danger)] transition-colors"
               >
                 Eliminar
@@ -200,6 +201,14 @@ export function ReflectionCard({ reflection, onDelete, onUpdate }: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="¿Eliminar esta reflexión?"
+        description="Esta acción no se puede deshacer."
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </div>
   );
 }

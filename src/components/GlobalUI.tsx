@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, LogOut } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -23,9 +24,21 @@ export function GlobalUI() {
 
   const toggle = () => {
     const next = !dark;
+    const root = document.documentElement;
+
+    // Transición de color acotada al momento del cambio: se agrega justo
+    // antes y se saca ~200ms después, para no dejar un `transition` viviendo
+    // permanentemente (eso hace que hovers/focus/clicks normales también
+    // animen y se sientan con lag).
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!prefersReducedMotion) {
+      root.classList.add("theme-transition");
+      window.setTimeout(() => root.classList.remove("theme-transition"), 250);
+    }
+
     setDark(next);
-    document.documentElement.classList.remove("dark", "light");
-    document.documentElement.classList.add(next ? "dark" : "light");
+    root.classList.remove("dark", "light");
+    root.classList.add(next ? "dark" : "light");
     localStorage.setItem("theme", next ? "dark" : "light");
   };
 
@@ -48,13 +61,25 @@ export function GlobalUI() {
           <LogOut size={16} strokeWidth={1.8} />
         </button>
       )}
-      <button
+      <motion.button
         onClick={toggle}
         aria-label="Cambiar tema"
-        className="p-2.5 rounded-full bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
+        whileTap={{ scale: 0.9 }}
+        className="relative overflow-hidden p-2.5 rounded-full bg-[var(--surface)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
       >
-        {dark ? <Sun size={16} strokeWidth={1.8} /> : <Moon size={16} strokeWidth={1.8} />}
-      </button>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={dark ? "sun" : "moon"}
+            className="flex"
+            initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
+            animate={{ opacity: 1, rotate: 0, scale: 1 }}
+            exit={{ opacity: 0, rotate: 90, scale: 0.6 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+          >
+            {dark ? <Sun size={16} strokeWidth={1.8} /> : <Moon size={16} strokeWidth={1.8} />}
+          </motion.span>
+        </AnimatePresence>
+      </motion.button>
     </div>
   );
 }

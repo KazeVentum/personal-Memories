@@ -25,11 +25,9 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed left-0 right-0 z-50 flex items-center gap-1 p-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] w-fit mx-auto"
+      className="md:hidden fixed left-0 right-0 z-50 flex items-center gap-1 p-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] w-fit mx-auto"
       style={{
         boxShadow: "0 8px 40px rgba(0,0,0,0.25)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
         bottom: "calc(2rem + env(safe-area-inset-bottom))",
       }}
     >

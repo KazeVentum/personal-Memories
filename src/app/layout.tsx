@@ -17,14 +17,14 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  applicationName: "Reflexiones",
-  title: { default: "Reflexiones", template: "%s — Reflexiones" },
+  applicationName: "Reflex",
+  title: { default: "Reflex", template: "%s — Reflex" },
   description: "Biblioteca personal de reflexiones sobre libros",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Reflexiones",
+    title: "Reflex",
   },
   formatDetection: { telephone: false },
 };

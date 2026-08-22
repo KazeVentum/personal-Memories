@@ -10,6 +10,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { RecordButton } from "@/components/RecordButton";
 import { BookProgressBar } from "@/components/BookProgressBar";
 import { PageUpdateSheet } from "@/components/PageUpdateSheet";
+import { Sidebar } from "@/components/Sidebar";
 import type { Book } from "@/types";
 
 const PROMPTS = [
@@ -117,20 +118,25 @@ export default function Home() {
 
   if (state === "done" && audioBlob) {
     return (
-      <motion.main
-        className="min-h-screen flex flex-col px-5 pt-16 pb-36 max-w-md mx-auto w-full"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <ReflectionForm audioBlob={audioBlob} duration={duration} onSaved={handleSaved} onCancel={reset} />
-        <BottomNav />
-      </motion.main>
+      <>
+        <Sidebar />
+        <motion.main
+          className="min-h-screen flex flex-col px-5 pt-16 pb-36 max-w-md md:max-w-2xl mx-auto w-full md:pl-64 md:pb-16 md:pt-20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <ReflectionForm audioBlob={audioBlob} duration={duration} onSaved={handleSaved} onCancel={reset} />
+          <BottomNav />
+        </motion.main>
+      </>
     );
   }
 
   return (
-    <main className="min-h-screen flex flex-col px-5 pt-14 pb-36 max-w-md mx-auto w-full gap-4">
+    <>
+    <Sidebar />
+    <main className="min-h-screen flex flex-col px-5 pt-14 pb-36 max-w-md md:max-w-4xl mx-auto w-full gap-4 md:pl-64 md:pb-16 md:pt-20 lg:max-w-5xl">
 
       {/* Greeting */}
       <motion.div
@@ -139,64 +145,70 @@ export default function Home() {
         transition={{ duration: 0.5 }}
       >
         <p className="text-xs uppercase tracking-widest text-[var(--muted)] mb-0.5">{getDate()}</p>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-3xl text-[var(--fg)]">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-3xl md:text-4xl text-[var(--fg)]">
           {getGreeting()}
         </h1>
       </motion.div>
 
-      {/* Quote card */}
-      <motion.div
-        className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5"
-        style={{ boxShadow: "0 2px 20px rgba(0,0,0,0.10)" }}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <p className="font-[family-name:var(--font-fraunces)] text-[var(--accent)] text-3xl leading-none mb-3 select-none">❝</p>
-        <p className="font-[family-name:var(--font-fraunces)] text-[var(--fg)] text-base leading-relaxed italic mb-3">
-          {quote.text}
-        </p>
-        <p className="text-xs text-[var(--muted)]">— {quote.author}</p>
-      </motion.div>
-
-      {/* Reflection prompt */}
-      <motion.div
-        className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-4"
-        style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <p className="text-[10px] uppercase tracking-widest text-[var(--accent)] mb-1.5">Reflexión de esta noche</p>
-        <p className="text-sm text-[var(--fg)] leading-relaxed">{prompt}</p>
-      </motion.div>
-
-      {/* Hold-to-record */}
-      <motion.div
-        className="flex flex-col items-center gap-4 py-2"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        <RecordButton state={state} onStart={start} onStop={stop} />
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={state}
-            className="text-xs text-[var(--muted)] text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-[1fr_320px] md:grid-rows-[auto_auto] md:gap-x-6 md:gap-y-4 md:items-start">
+        <div className="order-1 md:order-none flex flex-col gap-4 md:col-start-1 md:row-start-1">
+          {/* Quote card */}
+          <motion.div
+            className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 md:p-7"
+            style={{ boxShadow: "0 2px 20px rgba(0,0,0,0.10)" }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
-            {state === "recording"
-              ? `Grabando… ${elapsed}s`
-              : "Tocá para capturar un pensamiento"}
-          </motion.p>
-        </AnimatePresence>
-      </motion.div>
+            <p className="font-[family-name:var(--font-fraunces)] text-[var(--accent)] text-3xl leading-none mb-3 select-none">❝</p>
+            <p className="font-[family-name:var(--font-fraunces)] text-[var(--fg)] text-base md:text-lg leading-relaxed italic mb-3">
+              {quote.text}
+            </p>
+            <p className="text-xs text-[var(--muted)]">— {quote.author}</p>
+          </motion.div>
 
-      {/* Books in progress */}
-      <BooksInProgress onOpenSheet={setSheetBook} />
+          {/* Reflection prompt */}
+          <motion.div
+            className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] px-5 py-4 md:px-7 md:py-5"
+            style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <p className="text-[10px] uppercase tracking-widest text-[var(--accent)] mb-1.5">Reflexión de esta noche</p>
+            <p className="text-sm text-[var(--fg)] leading-relaxed">{prompt}</p>
+          </motion.div>
+        </div>
+
+        {/* Books in progress */}
+        <div className="order-3 md:order-none md:col-start-2 md:row-start-1 md:sticky md:top-10">
+          <BooksInProgress onOpenSheet={setSheetBook} />
+        </div>
+
+        {/* Hold-to-record — centrado en todo el ancho del contenido */}
+        <motion.div
+          className="order-2 md:order-none flex flex-col items-center gap-4 py-2 md:py-8 md:col-start-1 md:col-span-2 md:row-start-2"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <RecordButton state={state} onStart={start} onStop={stop} />
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={state}
+              className="text-xs text-[var(--muted)] text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {state === "recording"
+                ? `Grabando… ${elapsed}s`
+                : "Tocá para capturar un pensamiento"}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
+      </div>
 
       <PageUpdateSheet
         book={sheetBook}
@@ -206,5 +218,6 @@ export default function Home() {
 
       <BottomNav />
     </main>
+    </>
   );
 }

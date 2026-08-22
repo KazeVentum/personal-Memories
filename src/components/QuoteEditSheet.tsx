@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Quote } from "@/types";
 import { BookPicker } from "@/components/BookPicker";
 import { TagInput } from "@/components/TagInput";
+import { useIsDesktop } from "@/lib/hooks/useIsDesktop";
 
 interface QuoteEditSheetProps {
   quote: Quote | null;
@@ -25,6 +26,7 @@ export function QuoteEditSheet({ quote, onClose, onSave }: QuoteEditSheetProps) 
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
   const [kbOffset, setKbOffset] = useState(0);
+  const isDesktop = useIsDesktop();
 
   useEffect(() => {
     if (quote) {
@@ -74,25 +76,39 @@ export function QuoteEditSheet({ quote, onClose, onSave }: QuoteEditSheetProps) 
         <>
           <motion.div
             key="overlay"
-            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-[2px]"
+            className="fixed inset-0 z-[60] bg-black/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
           />
 
-          <motion.div
-            key="sheet"
-            className="fixed left-0 right-0 z-[70] bg-[var(--bg)] rounded-t-3xl shadow-2xl"
-            style={{ bottom: kbOffset, maxHeight: "92dvh" }}
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 320, damping: 32 }}
+          <div
+            className={
+              isDesktop
+                ? "fixed inset-0 z-[70] flex items-center justify-center px-6 pointer-events-none"
+                : "contents"
+            }
           >
-            <div className="overflow-y-auto max-h-[92dvh] px-5 pt-4 pb-10">
-              {/* Handle */}
-              <div className="w-10 h-1 rounded-full bg-[var(--border)] mx-auto mb-5" />
+            <motion.div
+              key="sheet"
+              className={
+                isDesktop
+                  ? "pointer-events-auto w-full max-w-md bg-[var(--bg)] border border-[var(--border)] rounded-3xl shadow-2xl"
+                  : "fixed left-0 right-0 z-[70] bg-[var(--bg)] rounded-t-3xl shadow-2xl"
+              }
+              style={{
+                bottom: isDesktop ? undefined : kbOffset,
+                maxHeight: isDesktop ? "88dvh" : "92dvh",
+              }}
+              initial={isDesktop ? { opacity: 0, scale: 0.95, y: 8 } : { y: "100%" }}
+              animate={isDesktop ? { opacity: 1, scale: 1, y: 0 } : { y: 0 }}
+              exit={isDesktop ? { opacity: 0, scale: 0.95, y: 8 } : { y: "100%" }}
+              transition={{ type: "spring", stiffness: isDesktop ? 400 : 320, damping: 32 }}
+            >
+            <div className={`overflow-y-auto px-5 pt-4 pb-10 ${isDesktop ? "max-h-[88dvh]" : "max-h-[92dvh]"}`}>
+              {/* Handle — solo en mobile */}
+              {!isDesktop && <div className="w-10 h-1 rounded-full bg-[var(--border)] mx-auto mb-5" />}
 
               {/* Header */}
               <p className="text-[10px] uppercase tracking-widest text-[var(--muted)] mb-1">Editando cita</p>
@@ -181,7 +197,8 @@ export function QuoteEditSheet({ quote, onClose, onSave }: QuoteEditSheetProps) 
                 </div>
               </div>
             </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

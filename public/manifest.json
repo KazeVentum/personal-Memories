@@ -1,6 +1,6 @@
 {
-  "name": "Reflexiones",
-  "short_name": "Reflexiones",
+  "name": "Reflex",
+  "short_name": "Reflex",
   "description": "Biblioteca personal de reflexiones sobre libros",
   "start_url": "/",
   "display": "standalone",

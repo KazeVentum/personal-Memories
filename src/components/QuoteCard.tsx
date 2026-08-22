@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Pencil, Trash2 } from "lucide-react";
 import type { Quote } from "@/types";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 
 interface Props {
   quote: Quote;
@@ -20,11 +21,11 @@ function formatDate(dateStr: string): string {
 
 export function QuoteCard({ quote, onDelete, onEdit }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const handleDelete = () => {
-    if (window.confirm("¿Eliminar esta cita de forma permanente?")) {
-      onDelete(quote.id);
-    }
+    onDelete(quote.id);
+    setConfirmingDelete(false);
   };
 
   return (
@@ -46,10 +47,10 @@ export function QuoteCard({ quote, onDelete, onEdit }: Props) {
         </div>
 
         {/* Metadata */}
-        <div className="flex items-center justify-between text-xs text-[var(--muted)]">
-          <div className="flex flex-col gap-0.5">
+        <div className="flex items-start justify-between gap-3 text-xs text-[var(--muted)]">
+          <div className="flex flex-col gap-0.5 min-w-0 flex-1">
             {quote.books?.title && (
-              <span className="font-medium text-[var(--fg)] truncate max-w-[200px]">
+              <span className="font-medium text-[var(--fg)] truncate">
                 {quote.books.title}
               </span>
             )}
@@ -60,10 +61,10 @@ export function QuoteCard({ quote, onDelete, onEdit }: Props) {
               <span className="italic">Sin libro asociado</span>
             )}
           </div>
-          <div className="flex flex-col items-end gap-0.5 flex-shrink-0 ml-3">
-            <span>{formatDate(quote.created_at)}</span>
+          <div className="flex flex-col items-end gap-0.5 flex-shrink-0 text-right">
+            <span className="whitespace-nowrap">{formatDate(quote.created_at)}</span>
             {quote.page_number && (
-              <span className="text-[var(--accent)] font-medium">p. {quote.page_number}</span>
+              <span className="text-[var(--accent)] font-medium whitespace-nowrap">p. {quote.page_number}</span>
             )}
           </div>
         </div>
@@ -115,7 +116,7 @@ export function QuoteCard({ quote, onDelete, onEdit }: Props) {
                   Editar
                 </button>
                 <button
-                  onClick={(e) => { e.stopPropagation(); handleDelete(); }}
+                  onClick={(e) => { e.stopPropagation(); setConfirmingDelete(true); }}
                   className="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium border border-[var(--danger)]/30 text-[var(--danger)] rounded-2xl hover:border-[var(--danger)] hover:bg-[var(--danger)]/5 transition-colors"
                 >
                   <Trash2 size={15} />
@@ -126,6 +127,14 @@ export function QuoteCard({ quote, onDelete, onEdit }: Props) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="¿Eliminar esta cita?"
+        description="Se eliminará de forma permanente."
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </div>
   );
 }

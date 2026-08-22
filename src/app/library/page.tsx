@@ -9,6 +9,7 @@ import { QuoteCard } from "@/components/QuoteCard";
 import { QuoteForm } from "@/components/QuoteForm";
 import { QuoteEditSheet } from "@/components/QuoteEditSheet";
 import { BottomNav } from "@/components/BottomNav";
+import { Sidebar } from "@/components/Sidebar";
 import type { Quote } from "@/types";
 
 export default function LibraryPage() {
@@ -43,9 +44,11 @@ export default function LibraryPage() {
   }, [reflections, quotes, activeTab]);
 
   return (
-    <main className="min-h-screen flex flex-col px-5 pt-10 pb-36 max-w-md mx-auto w-full">
+    <>
+    <Sidebar />
+    <main className="min-h-screen flex flex-col px-5 pt-10 pb-36 max-w-md md:max-w-3xl mx-auto w-full md:pl-64 md:pb-16 md:pt-16 xl:max-w-5xl">
       <motion.h1
-        className="font-[family-name:var(--font-fraunces)] text-2xl text-[var(--fg)] mb-6"
+        className="font-[family-name:var(--font-fraunces)] text-2xl md:text-3xl text-[var(--fg)] mb-6 md:mb-8"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -53,53 +56,51 @@ export default function LibraryPage() {
         Biblioteca
       </motion.h1>
 
-      {/* Selector de Pestañas */}
-      <motion.div
-        className="flex bg-[var(--surface)] p-1 rounded-2xl mb-5 border border-[var(--border)]"
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.05 }}
-        style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}
-      >
-        <button
-          onClick={() => {
-            setActiveTab("reflections");
-            setSelectedTag(undefined);
-          }}
-          className={`flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
-            activeTab === "reflections"
-              ? "bg-[var(--bg)] text-[var(--fg)] shadow-sm"
-              : "text-[var(--muted)] hover:text-[var(--fg)]"
-          }`}
+      <div className="flex flex-col gap-3 mb-6">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
+        {/* Selector de Pestañas */}
+        <motion.div
+          className="flex bg-[var(--surface)] p-1 rounded-2xl border border-[var(--border)] md:w-64 md:shrink-0"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.05 }}
+          style={{ boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}
         >
-          Reflexiones
-        </button>
-        <button
-          onClick={() => {
-            setActiveTab("quotes");
-            setSelectedTag(undefined);
-          }}
-          className={`flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
-            activeTab === "quotes"
-              ? "bg-[var(--bg)] text-[var(--fg)] shadow-sm"
-              : "text-[var(--muted)] hover:text-[var(--fg)]"
-          }`}
-        >
-          Citas
-        </button>
-      </motion.div>
+          <button
+            onClick={() => {
+              setActiveTab("reflections");
+              setSelectedTag(undefined);
+            }}
+            className={`flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+              activeTab === "reflections"
+                ? "bg-[var(--bg)] text-[var(--fg)] shadow-sm"
+                : "text-[var(--muted)] hover:text-[var(--fg)]"
+            }`}
+          >
+            Reflexiones
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab("quotes");
+              setSelectedTag(undefined);
+            }}
+            className={`flex-1 py-2.5 text-xs font-semibold rounded-xl transition-all cursor-pointer ${
+              activeTab === "quotes"
+                ? "bg-[var(--bg)] text-[var(--fg)] shadow-sm"
+                : "text-[var(--muted)] hover:text-[var(--fg)]"
+            }`}
+          >
+            Citas
+          </button>
+        </motion.div>
 
-      {/* Controles de Filtros */}
-      <motion.div
-        className="flex flex-col gap-3 mb-6"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
-      >
-        <select
+        <motion.select
           value={selectedBookId ?? ""}
           onChange={(e) => setSelectedBookId(e.target.value || undefined)}
-          className="w-full px-3.5 py-3.5 border border-[var(--border)] rounded-2xl bg-[var(--bg)] text-[var(--fg)] text-sm focus:outline-none focus:border-[var(--accent)]"
+          className="w-full px-3.5 py-3.5 border border-[var(--border)] rounded-2xl bg-[var(--bg)] text-[var(--fg)] text-sm focus:outline-none focus:border-[var(--accent)] md:max-w-xs"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
         >
           <option value="">Todos los libros</option>
           {books.map((b) => (
@@ -107,27 +108,33 @@ export default function LibraryPage() {
               {b.title}
             </option>
           ))}
-        </select>
+        </motion.select>
+      </div>
 
-        {allTags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {allTags.map((tag) => (
-              <motion.button
-                key={tag}
-                onClick={() => setSelectedTag(selectedTag === tag ? undefined : tag)}
-                whileTap={{ scale: 0.94 }}
-                className={`px-3 py-2 text-[10px] uppercase tracking-wider font-semibold rounded-full border transition-colors cursor-pointer ${
-                  selectedTag === tag
-                    ? "bg-[var(--fg)] text-[var(--bg)] border-[var(--fg)]"
-                    : "border-[var(--border)] text-[var(--muted)] hover:border-[var(--accent)]"
-                }`}
-              >
-                #{tag}
-              </motion.button>
-            ))}
-          </div>
-        )}
-      </motion.div>
+      {allTags.length > 0 && (
+        <motion.div
+          className="flex flex-wrap gap-1.5"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
+        >
+          {allTags.map((tag) => (
+            <motion.button
+              key={tag}
+              onClick={() => setSelectedTag(selectedTag === tag ? undefined : tag)}
+              whileTap={{ scale: 0.94 }}
+              className={`px-3 py-2 text-[10px] uppercase tracking-wider font-semibold rounded-full border transition-colors cursor-pointer ${
+                selectedTag === tag
+                  ? "bg-[var(--fg)] text-[var(--bg)] border-[var(--fg)]"
+                  : "border-[var(--border)] text-[var(--muted)] hover:border-[var(--accent)]"
+              }`}
+            >
+              #{tag}
+            </motion.button>
+          ))}
+        </motion.div>
+      )}
+      </div>
 
       {/* Todo el contenido del tab en un solo bloque keyed — sin elementos sueltos fuera */}
       <AnimatePresence mode="wait">
@@ -153,13 +160,15 @@ export default function LibraryPage() {
             </p>
           )}
 
-          {!loading && activeTab === "reflections" && reflections.map((r) => (
-            <ReflectionCard key={r.id} reflection={r} onDelete={deleteReflection} onUpdate={updateReflection} />
-          ))}
+          <div className="flex flex-col gap-3.5 md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-3">
+            {!loading && activeTab === "reflections" && reflections.map((r) => (
+              <ReflectionCard key={r.id} reflection={r} onDelete={deleteReflection} onUpdate={updateReflection} />
+            ))}
 
-          {!loading && activeTab === "quotes" && quotes.map((q) => (
-            <QuoteCard key={q.id} quote={q} onDelete={deleteQuote} onEdit={setEditingQuote} />
-          ))}
+            {!loading && activeTab === "quotes" && quotes.map((q) => (
+              <QuoteCard key={q.id} quote={q} onDelete={deleteQuote} onEdit={setEditingQuote} />
+            ))}
+          </div>
         </motion.div>
       </AnimatePresence>
 
@@ -171,5 +180,6 @@ export default function LibraryPage() {
 
       <BottomNav />
     </main>
+    </>
   );
 }
