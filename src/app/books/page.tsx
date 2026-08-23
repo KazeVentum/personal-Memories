@@ -104,7 +104,7 @@ function BookRow({
           >
             <div className="flex items-start justify-between gap-2">
               <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                <span className="text-[var(--fg)] font-[family-name:var(--font-fraunces)] truncate">{book.title}</span>
+                <span className="text-[var(--fg)] font-[family-name:var(--font-fraunces)]">{book.title}</span>
                 {book.author && <span className="text-sm text-[var(--muted)] truncate">{book.author}</span>}
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
@@ -209,7 +209,7 @@ export default function BooksPage() {
           <motion.button
             type="submit"
             disabled={saving || !title.trim()}
-            className="w-full py-3 mt-1 bg-[var(--fg)] text-[var(--bg)] text-sm font-medium rounded-xl disabled:opacity-50 transition-opacity"
+            className="w-full py-3 mt-1 bg-[var(--fg)] text-[var(--bg)] text-sm font-medium rounded-xl hover:opacity-85 disabled:opacity-50 transition-opacity"
             whileTap={{ scale: 0.97 }}
           >
             {saving ? "Guardando..." : "Agregar libro"}

@@ -189,7 +189,7 @@ export function QuoteEditSheet({ quote, onClose, onSave }: QuoteEditSheetProps) 
                   <motion.button
                     onClick={handleSave}
                     disabled={saving || !quoteText.trim()}
-                    className="flex-1 py-4 bg-[var(--fg)] text-[var(--bg)] rounded-2xl text-sm font-medium disabled:opacity-50 transition-opacity"
+                    className="flex-1 py-4 bg-[var(--fg)] text-[var(--bg)] rounded-2xl text-sm font-medium hover:opacity-85 disabled:opacity-50 transition-opacity"
                     whileTap={{ scale: 0.97 }}
                   >
                     {saving ? "Guardando..." : "Guardar"}

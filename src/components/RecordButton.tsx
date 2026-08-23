@@ -42,12 +42,14 @@ export function RecordButton({ state, onStart, onStop }: Props) {
 
       <motion.button
         onClick={handleClick}
+        whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.9 }}
         animate={isRecording ? { scale: 1.08 } : { scale: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={`
           relative z-10 w-24 h-24 rounded-full flex items-center justify-center
-          select-none cursor-pointer
+          select-none cursor-pointer transition-[filter]
+          hover:brightness-110
           ${isRecording ? "bg-[var(--danger)]" : "bg-[var(--accent)]"}
         `}
         aria-label={isRecording ? "Tocá para terminar" : "Tocá para grabar"}

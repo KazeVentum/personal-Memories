@@ -73,13 +73,13 @@ function BooksInProgress({ onOpenSheet }: { onOpenSheet: (book: Book) => void })
           style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}
         >
           <div className="min-w-0 mb-3">
-            <p className="font-[family-name:var(--font-fraunces)] text-[var(--fg)] truncate">{book.title}</p>
+            <p className="font-[family-name:var(--font-fraunces)] text-[var(--fg)]">{book.title}</p>
             {book.author && <p className="text-xs text-[var(--muted)] truncate mt-0.5">{book.author}</p>}
           </div>
           <BookProgressBar current={book.current_page} total={book.total_pages} className="mb-3" />
           <button
             onClick={() => onOpenSheet(book)}
-            className="w-full px-4 py-2.5 text-sm font-medium text-[var(--bg)] bg-[var(--accent)] rounded-xl active:opacity-80 transition-opacity"
+            className="w-full px-4 py-2.5 text-sm font-medium text-[var(--bg)] bg-[var(--accent)] rounded-xl hover:opacity-85 active:opacity-80 transition-opacity"
           >
             {book.current_page === 0 ? "Iniciar" : "Actualizar"}
           </button>

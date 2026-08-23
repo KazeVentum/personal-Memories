@@ -119,7 +119,7 @@ export function PageUpdateSheet({ book, onClose, onUpdate }: PageUpdateSheetProp
               <div className="grid grid-cols-[64px_1fr_64px] gap-3 mb-6">
                 <button
                   onClick={() => adjust(-1)}
-                  className="h-16 rounded-2xl border-2 border-[var(--border)] flex items-center justify-center text-[var(--fg)] active:bg-[var(--surface)] transition-colors"
+                  className="h-16 rounded-2xl border-2 border-[var(--border)] flex items-center justify-center text-[var(--fg)] hover:border-[var(--accent)] active:bg-[var(--surface)] transition-colors"
                 >
                   <Minus size={24} />
                 </button>
@@ -140,7 +140,7 @@ export function PageUpdateSheet({ book, onClose, onUpdate }: PageUpdateSheetProp
 
                 <button
                   onClick={() => adjust(1)}
-                  className="h-16 rounded-2xl border-2 border-[var(--border)] flex items-center justify-center text-[var(--fg)] active:bg-[var(--surface)] transition-colors"
+                  className="h-16 rounded-2xl border-2 border-[var(--border)] flex items-center justify-center text-[var(--fg)] hover:border-[var(--accent)] active:bg-[var(--surface)] transition-colors"
                 >
                   <Plus size={24} />
                 </button>
@@ -166,7 +166,7 @@ export function PageUpdateSheet({ book, onClose, onUpdate }: PageUpdateSheetProp
               <motion.button
                 onClick={handleSave}
                 disabled={saving}
-                className="w-full py-4 bg-[var(--fg)] text-[var(--bg)] rounded-2xl text-base font-medium disabled:opacity-50 transition-opacity"
+                className="w-full py-4 bg-[var(--fg)] text-[var(--bg)] rounded-2xl text-base font-medium hover:opacity-85 disabled:opacity-50 transition-opacity"
                 whileTap={{ scale: 0.97 }}
               >
                 {saving ? "Guardando..." : "Guardar"}
