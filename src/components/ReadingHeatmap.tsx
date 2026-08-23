@@ -87,7 +87,7 @@ export function ReadingHeatmap({ logs }: ReadingHeatmapProps) {
     const sunday = weekDays[6];
     const fmt = (str: string) => {
       const d = new Date(str + "T00:00:00");
-      return d.toLocaleDateString("es-AR", { day: "numeric", month: "short" });
+      return d.toLocaleDateString("es", { day: "numeric", month: "short" });
     };
     return `${fmt(monday.dateStr)} – ${fmt(sunday.dateStr)}`;
   }, [weekOffset, weekDays]);

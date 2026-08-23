@@ -155,8 +155,8 @@ export default function LibraryPage() {
           {!loading && itemsCount === 0 && (
             <p className="text-sm text-[var(--muted)] text-center py-12 leading-relaxed">
               {activeTab === "reflections"
-                ? "Aún no hay reflexiones. Mantené presionado el grabador y compartí tu primer pensamiento."
-                : "Aún no agregaste citas textuales. Desplegá el formulario superior e ingresá tu primera cita."}
+                ? "Aún no hay reflexiones. Mantén presionado el grabador y comparte tu primer pensamiento."
+                : "Aún no agregaste citas textuales. Despliega el formulario superior e ingresa tu primera cita."}
             </p>
           )}
 

@@ -52,7 +52,7 @@ export function RecordButton({ state, onStart, onStop }: Props) {
           hover:brightness-110
           ${isRecording ? "bg-[var(--danger)]" : "bg-[var(--accent)]"}
         `}
-        aria-label={isRecording ? "Tocá para terminar" : "Tocá para grabar"}
+        aria-label={isRecording ? "Toca para terminar" : "Toca para grabar"}
       >
         <AnimatePresence mode="wait">
           {isRecording ? (

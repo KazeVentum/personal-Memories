@@ -102,7 +102,7 @@ export function ReflectionForm({ audioBlob, duration, onSaved, onCancel }: Props
       <div className="flex flex-col gap-1">
         <label className="text-sm text-[var(--muted)]">Notas</label>
         <textarea
-          placeholder="Escribí una nota sobre esta reflexión..."
+          placeholder="Escribe una nota sobre esta reflexión..."
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}

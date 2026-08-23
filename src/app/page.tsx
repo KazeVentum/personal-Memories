@@ -14,20 +14,20 @@ import { Sidebar } from "@/components/Sidebar";
 import type { Book } from "@/types";
 
 const PROMPTS = [
-  "¿Qué pensamiento no podés soltar después de hoy?",
-  "¿Qué frase resonó más en vos esta noche?",
+  "¿Qué pensamiento no puedes soltar después de hoy?",
+  "¿Qué frase resonó más contigo esta noche?",
   "¿Qué cambiaría si aplicaras lo que leíste?",
   "¿Con qué personaje o idea te identificaste?",
   "¿Qué pregunta te dejó el libro de hoy?",
   "¿Qué querrías recordar de esta lectura en diez años?",
-  "¿Qué emoción despertó en vos esta lectura?",
+  "¿Qué emoción despertó en ti esta lectura?",
 ];
 
 const QUOTES = [
-  { text: "Un libro es un sueño que tenés en tus manos.", author: "Neil Gaiman" },
+  { text: "Un libro es un sueño que tienes en tus manos.", author: "Neil Gaiman" },
   { text: "El lector vive mil vidas antes de morir.", author: "George R.R. Martin" },
   { text: "No hay mejor almohada que un buen libro.", author: "Charles Kingsley" },
-  { text: "Los libros son espejos: solo ves en ellos lo que ya tenés dentro.", author: "Carlos Ruiz Zafón" },
+  { text: "Los libros son espejos: solo ves en ellos lo que ya tienes dentro.", author: "Carlos Ruiz Zafón" },
   { text: "Leer es retirarse a pensar.", author: "Voltaire" },
   { text: "El libro es el único lugar donde la mente se detiene.", author: "Anónimo" },
   { text: "La lectura es una conversación con los mejores pensadores de la historia.", author: "Descartes" },
@@ -42,7 +42,7 @@ function getGreeting(): string {
 }
 
 function getDate(): string {
-  const d = new Date().toLocaleDateString("es-AR", {
+  const d = new Date().toLocaleDateString("es", {
     weekday: "long", day: "numeric", month: "long",
   });
   return d.charAt(0).toUpperCase() + d.slice(1);
@@ -202,7 +202,7 @@ export default function Home() {
             >
               {state === "recording"
                 ? `Grabando… ${elapsed}s`
-                : "Tocá para capturar un pensamiento"}
+                : "Toca para capturar un pensamiento"}
             </motion.p>
           </AnimatePresence>
         </motion.div>

@@ -127,7 +127,7 @@ export function QuoteEditSheet({ quote, onClose, onSave }: QuoteEditSheetProps) 
                     value={quoteText}
                     onChange={(e) => setQuoteText(e.target.value)}
                     rows={4}
-                    placeholder="Escribí la cita..."
+                    placeholder="Escribe la cita..."
                     className={`${inputClass} font-[family-name:var(--font-fraunces)] italic leading-relaxed resize-none`}
                   />
                 </div>

@@ -92,7 +92,7 @@ export function QuoteForm({ onSave }: Props) {
                 <label className="text-xs uppercase tracking-wider font-semibold text-[var(--muted)]">Cita textual *</label>
                 <textarea
                   required
-                  placeholder="«Escribí aquí el fragmento destacado del libro...»"
+                  placeholder="«Escribe aquí el fragmento destacado del libro...»"
                   value={quoteText}
                   onChange={(e) => setQuoteText(e.target.value)}
                   rows={4}
@@ -120,7 +120,7 @@ export function QuoteForm({ onSave }: Props) {
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs uppercase tracking-wider font-semibold text-[var(--muted)]">Tus notas / Interpretación</label>
                 <textarea
-                  placeholder="¿Por qué te llamó la atención? ¿Qué significa para vos?"
+                  placeholder="¿Por qué te llamó la atención? ¿Qué significa para ti?"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}

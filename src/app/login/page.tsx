@@ -26,7 +26,7 @@ export default function LoginPage() {
     } else {
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) { setError(error.message); setLoading(false); }
-      else setSuccess("¡Cuenta creada! Ya podés ingresar.");
+      else setSuccess("¡Cuenta creada! Ya puedes ingresar.");
       setLoading(false);
     }
   };
@@ -47,7 +47,7 @@ export default function LoginPage() {
             Reflex
           </h1>
           <p className="text-sm text-[var(--muted)]">
-            {mode === "login" ? "Ingresá tus credenciales" : "Creá tu cuenta personal"}
+            {mode === "login" ? "Ingresa tus credenciales" : "Crea tu cuenta personal"}
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export default function LoginPage() {
           onClick={() => { setMode(mode === "login" ? "register" : "login"); setError(null); setSuccess(null); }}
           className="text-sm text-[var(--muted)] hover:text-[var(--fg)] transition-colors text-center"
         >
-          {mode === "login" ? "¿No tenés cuenta? Registrate" : "¿Ya tenés cuenta? Ingresá"}
+          {mode === "login" ? "¿No tienes cuenta? Regístrate" : "¿Ya tienes cuenta? Ingresa"}
         </button>
       </div>
     </main>

@@ -21,7 +21,7 @@ function formatDuration(seconds: number | null): string {
 }
 
 function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("es-AR", {
+  return new Date(dateStr).toLocaleDateString("es", {
     day: "numeric",
     month: "short",
     year: "numeric",

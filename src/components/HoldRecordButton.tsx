@@ -52,7 +52,7 @@ export function HoldRecordButton({ state, elapsed, onStart, onStop }: Props) {
         transition={{ type: "spring", stiffness: 280, damping: 22 }}
         className="relative z-10 w-16 h-16 rounded-full flex items-center justify-center cursor-pointer"
         style={{ boxShadow: isRecording ? "0 0 32px rgba(201,149,108,0.35)" : "0 4px 20px rgba(0,0,0,0.2)" }}
-        aria-label={isRecording ? "Soltá para guardar" : "Mantené presionado para grabar"}
+        aria-label={isRecording ? "Suelta para guardar" : "Mantén presionado para grabar"}
       >
         <AnimatePresence mode="wait">
           {isRecording ? (
