@@ -26,7 +26,7 @@ export function Sidebar() {
   return (
     <aside className="hidden md:flex md:flex-col md:fixed md:left-0 md:top-0 md:h-screen md:w-64 md:shrink-0 md:px-4 md:py-8 md:border-r md:border-[var(--border)] md:bg-[var(--bg)]">
       <p className="font-[family-name:var(--font-fraunces)] text-xl text-[var(--fg)] px-4 mb-8">
-        Reflexiones
+        Reflex
       </p>
       <nav className="flex flex-col gap-1">
         {navItem("/", <Mic size={20} strokeWidth={1.8} />, "Grabar")}
