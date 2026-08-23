@@ -34,8 +34,14 @@ export default function LoginPage() {
   const inputClass = "px-4 py-3 border border-[var(--border)] rounded-xl bg-transparent text-[var(--fg)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]";
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-[var(--bg)]">
-      <div className="w-full max-w-sm flex flex-col gap-6">
+    <main className="relative min-h-screen flex flex-col items-center justify-center px-6 bg-[var(--bg)] overflow-hidden">
+      <div className="aurora-field">
+        <div className="aurora-blob aurora-blob-1" />
+        <div className="aurora-blob aurora-blob-2" />
+        <div className="aurora-blob aurora-blob-3" />
+      </div>
+
+      <div className="relative w-full max-w-sm flex flex-col gap-6">
         <div className="text-center">
           <h1 className="font-[family-name:var(--font-fraunces)] text-2xl text-[var(--fg)] mb-2">
             Reflex

@@ -76,3 +76,79 @@ select option {
   background-color: var(--bg);
   color: var(--fg);
 }
+
+/* Aurora de fondo (solo login). CSS puro: cada blob es un elemento estático
+   con `filter: blur()` que el navegador rasteriza en una capa GPU una sola
+   vez; la animación mueve esa capa con `transform`/`opacity` (compositor,
+   sin repintar), a diferencia de backdrop-filter que sí recalcula cada
+   frame. Por eso esto es barato aunque se vea "vivo". */
+.aurora-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  will-change: transform;
+}
+
+.aurora-blob-1 {
+  width: 46vw;
+  height: 46vw;
+  max-width: 560px;
+  max-height: 560px;
+  top: -12%;
+  left: -8%;
+  background: var(--accent);
+  opacity: 0.28;
+  animation: aurora-drift-1 24s ease-in-out infinite;
+}
+
+.aurora-blob-2 {
+  width: 40vw;
+  height: 40vw;
+  max-width: 480px;
+  max-height: 480px;
+  bottom: -14%;
+  right: -6%;
+  background: var(--accent);
+  opacity: 0.18;
+  animation: aurora-drift-2 28s ease-in-out infinite;
+}
+
+.aurora-blob-3 {
+  width: 34vw;
+  height: 34vw;
+  max-width: 420px;
+  max-height: 420px;
+  top: 32%;
+  left: 55%;
+  background: var(--fg);
+  opacity: 0.07;
+  animation: aurora-drift-3 32s ease-in-out infinite;
+}
+
+@keyframes aurora-drift-1 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50% { transform: translate(8%, 6%) scale(1.12); }
+}
+
+@keyframes aurora-drift-2 {
+  0%, 100% { transform: translate(0%, 0%) scale(1.05); }
+  50% { transform: translate(-10%, -6%) scale(0.92); }
+}
+
+@keyframes aurora-drift-3 {
+  0%, 100% { transform: translate(0%, 0%) scale(1); }
+  50% { transform: translate(-6%, 10%) scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob {
+    animation: none !important;
+  }
+}
