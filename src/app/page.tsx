@@ -72,19 +72,17 @@ function BooksInProgress({ onOpenSheet }: { onOpenSheet: (book: Book) => void })
           className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4"
           style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}
         >
-          <div className="flex items-center justify-between gap-3 mb-3">
-            <div className="flex-1 min-w-0">
-              <p className="font-[family-name:var(--font-fraunces)] text-[var(--fg)] truncate">{book.title}</p>
-              {book.author && <p className="text-xs text-[var(--muted)] truncate mt-0.5">{book.author}</p>}
-            </div>
-            <button
-              onClick={() => onOpenSheet(book)}
-              className="flex-shrink-0 px-4 py-2.5 text-sm font-medium text-[var(--bg)] bg-[var(--accent)] rounded-xl active:opacity-80 transition-opacity"
-            >
-              {book.current_page === 0 ? "Iniciar" : "Actualizar"}
-            </button>
+          <div className="min-w-0 mb-3">
+            <p className="font-[family-name:var(--font-fraunces)] text-[var(--fg)] truncate">{book.title}</p>
+            {book.author && <p className="text-xs text-[var(--muted)] truncate mt-0.5">{book.author}</p>}
           </div>
-          <BookProgressBar current={book.current_page} total={book.total_pages} />
+          <BookProgressBar current={book.current_page} total={book.total_pages} className="mb-3" />
+          <button
+            onClick={() => onOpenSheet(book)}
+            className="w-full px-4 py-2.5 text-sm font-medium text-[var(--bg)] bg-[var(--accent)] rounded-xl active:opacity-80 transition-opacity"
+          >
+            {book.current_page === 0 ? "Iniciar" : "Actualizar"}
+          </button>
         </div>
       ))}
     </motion.div>
@@ -136,7 +134,7 @@ export default function Home() {
   return (
     <>
     <Sidebar />
-    <main className="min-h-screen flex flex-col px-5 pt-14 pb-36 max-w-md md:max-w-4xl mx-auto w-full gap-4 md:pl-64 md:pb-16 md:pt-20 lg:max-w-5xl">
+    <main className="min-h-screen flex flex-col px-5 pt-14 pb-36 max-w-md md:max-w-4xl mx-auto w-full gap-4 md:pl-64 md:pb-16 md:pt-20 lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl">
 
       {/* Greeting */}
       <motion.div
@@ -150,7 +148,7 @@ export default function Home() {
         </h1>
       </motion.div>
 
-      <div className="flex flex-col gap-4 md:grid md:grid-cols-[1fr_320px] md:grid-rows-[auto_auto] md:gap-x-6 md:gap-y-4 md:items-start">
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-[2fr_1fr] md:grid-rows-[auto_auto] md:gap-x-6 md:gap-y-4 md:items-start">
         <div className="order-1 md:order-none flex flex-col gap-4 md:col-start-1 md:row-start-1">
           {/* Quote card */}
           <motion.div

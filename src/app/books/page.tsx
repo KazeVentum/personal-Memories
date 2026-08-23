@@ -8,6 +8,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { BookProgressBar } from "@/components/BookProgressBar";
 import { ReadingHeatmap } from "@/components/ReadingHeatmap";
 import { PageUpdateSheet } from "@/components/PageUpdateSheet";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Sidebar } from "@/components/Sidebar";
 import type { Book } from "@/types";
 
@@ -33,6 +34,7 @@ function BookRow({
   const [author, setAuthor] = useState(book.author ?? "");
   const [totalPages, setTotalPages] = useState(book.total_pages?.toString() ?? "");
   const [saving, setSaving] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const handleSave = async () => {
     if (!title.trim()) return;
@@ -115,7 +117,7 @@ function BookRow({
                   <Pencil size={14} />
                 </button>
                 <button
-                  onClick={() => onDelete(book.id)}
+                  onClick={() => setConfirmingDelete(true)}
                   aria-label="Eliminar"
                   title="Eliminar"
                   className="p-2 text-[var(--muted)] border border-[var(--border)] rounded-lg hover:text-[var(--danger)] hover:border-[var(--danger)] transition-colors"
@@ -137,6 +139,14 @@ function BookRow({
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title={`¿Eliminar "${book.title}"?`}
+        description="Se eliminará el libro y su progreso de lectura de forma permanente."
+        onConfirm={() => { onDelete(book.id); setConfirmingDelete(false); }}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </motion.div>
   );
 }
@@ -168,7 +178,7 @@ export default function BooksPage() {
   return (
     <>
     <Sidebar />
-    <main className="min-h-screen flex flex-col px-5 pt-10 pb-36 max-w-md md:max-w-3xl mx-auto w-full md:pl-64 md:pb-16 md:pt-16 xl:max-w-5xl">
+    <main className="min-h-screen flex flex-col px-5 pt-10 pb-36 max-w-md md:max-w-3xl mx-auto w-full md:pl-64 md:pb-16 md:pt-16 xl:max-w-5xl 2xl:max-w-7xl">
       <motion.h1
         className="font-[family-name:var(--font-fraunces)] text-2xl md:text-3xl text-[var(--fg)] mb-6 md:mb-8"
         initial={{ opacity: 0, y: -10 }}
@@ -233,7 +243,7 @@ export default function BooksPage() {
         </motion.p>
       )}
 
-      <motion.div className="flex flex-col md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-3">
+      <motion.div className="flex flex-col md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
         <AnimatePresence initial={false}>
           {books.map((book) => (
             <BookRow

@@ -46,7 +46,7 @@ export default function LibraryPage() {
   return (
     <>
     <Sidebar />
-    <main className="min-h-screen flex flex-col px-5 pt-10 pb-36 max-w-md md:max-w-3xl mx-auto w-full md:pl-64 md:pb-16 md:pt-16 xl:max-w-5xl">
+    <main className="min-h-screen flex flex-col px-5 pt-10 pb-36 max-w-md md:max-w-3xl mx-auto w-full md:pl-64 md:pb-16 md:pt-16 xl:max-w-5xl 2xl:max-w-7xl">
       <motion.h1
         className="font-[family-name:var(--font-fraunces)] text-2xl md:text-3xl text-[var(--fg)] mb-6 md:mb-8"
         initial={{ opacity: 0, y: -10 }}
@@ -160,7 +160,7 @@ export default function LibraryPage() {
             </p>
           )}
 
-          <div className="flex flex-col gap-3.5 md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-3">
+          <div className="flex flex-col gap-3.5 md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
             {!loading && activeTab === "reflections" && reflections.map((r) => (
               <ReflectionCard key={r.id} reflection={r} onDelete={deleteReflection} onUpdate={updateReflection} />
             ))}
