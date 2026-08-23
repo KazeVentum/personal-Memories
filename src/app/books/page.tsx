@@ -56,7 +56,7 @@ function BookRow({
     "w-full px-3 py-2.5 border border-[var(--border)] rounded-xl bg-transparent text-sm text-[var(--fg)] focus:outline-none focus:border-[var(--accent)]";
 
   return (
-    <motion.div variants={itemVariants} initial="hidden" animate="visible" exit="exit" className="md:border md:border-[var(--border)] md:rounded-2xl md:bg-[var(--surface)] md:overflow-hidden">
+    <motion.div variants={itemVariants} initial="hidden" animate="visible" exit="exit" className="md:border md:border-[var(--border)] md:rounded-2xl md:bg-[var(--surface)] md:overflow-hidden md:mb-4 md:break-inside-avoid">
       <AnimatePresence mode="wait">
         {editing ? (
           <motion.div
@@ -243,7 +243,7 @@ export default function BooksPage() {
         </motion.p>
       )}
 
-      <motion.div className="flex flex-col md:grid md:grid-cols-2 md:gap-4 xl:grid-cols-3 2xl:grid-cols-4">
+      <motion.div className="flex flex-col md:block md:columns-2 md:gap-4 xl:columns-3 2xl:columns-4">
         <AnimatePresence initial={false}>
           {books.map((book) => (
             <BookRow
