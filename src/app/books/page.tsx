@@ -188,7 +188,7 @@ export default function BooksPage() {
         Mis libros
       </motion.h1>
 
-      <div className="flex flex-col gap-8 md:grid md:grid-cols-2 md:gap-6 md:items-start mb-8">
+      <div className="flex flex-col gap-8 md:grid md:grid-cols-2 md:gap-6 md:items-stretch mb-8">
         <motion.form
           onSubmit={handleSubmit}
           className="flex flex-col gap-2"
@@ -217,7 +217,7 @@ export default function BooksPage() {
         </motion.form>
 
         <motion.div
-          className="p-4 rounded-2xl bg-[var(--surface)]"
+          className="p-4 rounded-2xl bg-[var(--surface)] flex flex-col justify-center"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
