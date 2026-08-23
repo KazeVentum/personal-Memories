@@ -104,8 +104,8 @@ select option {
   top: -12%;
   left: -8%;
   background: var(--accent);
-  opacity: 0.28;
-  animation: aurora-drift-1 24s ease-in-out infinite;
+  opacity: 0.32;
+  animation: aurora-drift-1 13s linear infinite;
 }
 
 .aurora-blob-2 {
@@ -116,8 +116,8 @@ select option {
   bottom: -14%;
   right: -6%;
   background: var(--accent);
-  opacity: 0.18;
-  animation: aurora-drift-2 28s ease-in-out infinite;
+  opacity: 0.22;
+  animation: aurora-drift-2 16s linear infinite;
 }
 
 .aurora-blob-3 {
@@ -128,23 +128,34 @@ select option {
   top: 32%;
   left: 55%;
   background: var(--fg);
-  opacity: 0.07;
-  animation: aurora-drift-3 32s ease-in-out infinite;
+  opacity: 0.1;
+  animation: aurora-drift-3 19s linear infinite;
 }
 
+/* Varios puntos de paso (no solo ida y vuelta) para que el movimiento se
+   sienta continuo en vez de "pausar" en los extremos. */
 @keyframes aurora-drift-1 {
-  0%, 100% { transform: translate(0%, 0%) scale(1); }
-  50% { transform: translate(8%, 6%) scale(1.12); }
+  0% { transform: translate(0%, 0%) scale(1); }
+  25% { transform: translate(18%, 10%) scale(1.2); }
+  50% { transform: translate(10%, 22%) scale(0.9); }
+  75% { transform: translate(-12%, 8%) scale(1.1); }
+  100% { transform: translate(0%, 0%) scale(1); }
 }
 
 @keyframes aurora-drift-2 {
-  0%, 100% { transform: translate(0%, 0%) scale(1.05); }
-  50% { transform: translate(-10%, -6%) scale(0.92); }
+  0% { transform: translate(0%, 0%) scale(1.05); }
+  25% { transform: translate(-16%, -12%) scale(0.85); }
+  50% { transform: translate(-24%, 6%) scale(1.15); }
+  75% { transform: translate(-8%, 16%) scale(0.95); }
+  100% { transform: translate(0%, 0%) scale(1.05); }
 }
 
 @keyframes aurora-drift-3 {
-  0%, 100% { transform: translate(0%, 0%) scale(1); }
-  50% { transform: translate(-6%, 10%) scale(1.15); }
+  0% { transform: translate(0%, 0%) scale(1); }
+  25% { transform: translate(-14%, 16%) scale(1.25); }
+  50% { transform: translate(10%, 24%) scale(0.85); }
+  75% { transform: translate(14%, -6%) scale(1.1); }
+  100% { transform: translate(0%, 0%) scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
